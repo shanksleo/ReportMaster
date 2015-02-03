@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="每日提醒">
+
+    <SwitchPreference
+        android:key="my_notify"
+        android:defaultValue="false"
+        android:summary="如果明天下雨,那么我会提醒你"
+
+        android:title="下雨提醒"
+     />
+</PreferenceScreen>
