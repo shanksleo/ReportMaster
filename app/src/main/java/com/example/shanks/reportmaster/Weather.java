@@ -2,6 +2,7 @@ package com.example.shanks.reportmaster;
 
 /**
  * Created by shanks on 15/1/30.
+ * Gson 解析,对应的类
  */
 public class Weather {
     public  Weatherinfo weatherinfo;

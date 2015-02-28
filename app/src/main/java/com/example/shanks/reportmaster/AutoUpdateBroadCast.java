@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+//定时唤起查询天气
 public class AutoUpdateBroadCast extends BroadcastReceiver {
     public AutoUpdateBroadCast() {
     }

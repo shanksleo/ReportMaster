@@ -38,28 +38,13 @@ import java.net.URLConnection;
  */
 public class PrefFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
     private String weatherGson;
-    private String w2;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        加载设置文件界面
         addPreferencesFromResource(R.xml.preference);
-//       自定义 sharedpreference 文件名字
-//        getPreferenceManager().setSharedPreferencesName("my_setting");
+//
         getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-//当任何一个按钮被点击,那么这个方法都会被触发
-    @Override
-    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-        SwitchPreference switchPreference = (SwitchPreference) findPreference("my_notify");
-        Log.d("abc","被点击");
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-
-
-
-
-        return super.onPreferenceTreeClick(preferenceScreen,preference);
     }
 
     @Override
@@ -68,22 +53,19 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         Log.d("abc","被修改"+ flah);
         //获得网络请求队列
         RequestQueue queue =  Volley.newRequestQueue(YoApplication.getContext());
-//      上海http://www.weather.com.cn/data/cityinfo/101020100.html
-//      杭州http://www.weather.com.cn/data/cityinfo/101210101.html
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://www.weather.com.cn/data/cityinfo/101210101.html", null,
+//      最新可用天气 上海 http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101020100&weatherType=0
+//      最新可用天气 杭州 http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101210101&weatherType=0
+//        weather 1,今天当前天气  weather2 明天天气
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101020100&weatherType=0", null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("abc", response.toString());
-                       // Toast.makeText(YoApplication.getContext(),response.toString(),Toast.LENGTH_LONG).show();
-                       // Toast.makeText(YoApplication.getContext(),response.toString(),Toast.LENGTH_LONG).show();
                         weatherGson = response.toString();
                         //使用 Gson 解析Json
-                        WeatherSmile weather = new Gson().fromJson(weatherGson,WeatherSmile.class);
-                      //  Toast.makeText(YoApplication.getContext(),weatherGson,Toast.LENGTH_LONG).show();
-                        Toast.makeText(YoApplication.getContext(),"今天天气是"+weather.weatherinfo.weather,Toast.LENGTH_LONG).show();
-//                        Toast.makeText(YoApplication.getContext(),"今天天气是"+weather.weatherinfo.weather.indexOf("雨") ,Toast.LENGTH_LONG).show();
+                        Weather weather = new Gson().fromJson(weatherGson,Weather.class);
+                        Toast.makeText(YoApplication.getContext(),weather.weatherinfo.city+"今天天气是"+weather.weatherinfo.weather1,Toast.LENGTH_LONG).show();
 
                     }
                 }, new Response.ErrorListener() {
@@ -94,28 +76,8 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         });
         queue.add(jsonObjectRequest);
 
-//        Notification.Builder mBuilder = new Notification.Builder(YoApplication.getContext());
-//        mBuilder.setSmallIcon(R.drawable.i001);
-//        mBuilder.setTicker("你点我试试");
-//        mBuilder.setContentTitle("好消息好消息");
-//        mBuilder.setContentText("你明天要带伞了");
-////        pendingIntent执行的操作实质上是参数传进来的Intent的操作
-////        PendingIntent intent = new PendingIntent();
-////        Intent intent1 = new Intent();
-////        intent1.setAction("");
-////        mBuilder.setContentIntent();
-////
-//        Notification notification =  mBuilder.build();
-//        NotificationManager notificationManager = (NotificationManager)YoApplication.getContext().getSystemService(YoApplication.getContext().NOTIFICATION_SERVICE);
-//        notificationManager.notify(0x122,notification);
-
         Intent intent = new Intent(YoApplication.getContext(),WeatherService.class);
         YoApplication.getContext().startService(intent);
-
-
-    }
-
-    public void notifyTop(){
 
 
     }

@@ -27,8 +27,8 @@ import java.util.Calendar;
 public class WeatherService extends Service {
     private String weatherGson;
     private String w2;
-    public WeatherService() {
-    }
+//    public WeatherService() {
+//    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -54,8 +54,7 @@ public class WeatherService extends Service {
 //        启动定时任务These allow you to schedule your application to be run at some point in the future.
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-     //   int aHouer = 1*60*1000; //3分钟
-     //   long trickTime = SystemClock.elapsedRealtime()+aHouer;
+
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 00);
@@ -70,22 +69,24 @@ public class WeatherService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
     private void updateWeather(){
         //获得网络请求队列
         RequestQueue queue =  Volley.newRequestQueue(YoApplication.getContext());
-        //上海http://www.weather.com.cn/data/cityinfo/101020100.html
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://www.weather.com.cn/data/cityinfo/101210101.html", null,
+//      最新可用天气 上海 http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101020100&weatherType=0
+//      最新可用天气 杭州 http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101210101&weatherType=0
+//        weather 1,今天当前天气  weather2 明天天气
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://weather.51wnl.com/weatherinfo/GetMoreWeather?cityCode=101020100&weatherType=0", null,
                 new Response.Listener<JSONObject>() {
 
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d("abc", response.toString());
                         weatherGson = response.toString();
-                        WeatherSmile weather = new Gson().fromJson(weatherGson,WeatherSmile.class);
-//                        Toast.makeText(YoApplication.getContext(), weather.weatherinfo.weather2, Toast.LENGTH_LONG).show();
-                        w2 = weather.weatherinfo.weather;
+                        Weather weather = new Gson().fromJson(weatherGson,Weather.class);
+                        w2 = weather.weatherinfo.weather2;
                         if (w2.indexOf("雨") != -1){
-//                            Toast.makeText(YoApplication.getContext(), w2.indexOf("雨") + "", Toast.LENGTH_LONG).show();
                             Notification.Builder mBuilder = new Notification.Builder(YoApplication.getContext());
                             mBuilder.setSmallIcon(R.drawable.i001);
                             mBuilder.setTicker("你点我啊");
